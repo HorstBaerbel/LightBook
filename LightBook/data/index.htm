@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LightBook</title>
+        <meta name='mobile-web-app-capable' content='yes' />
+        <meta name='viewport' content='width=device-width, height=device-height' />
+        <link media='screen' rel="stylesheet" type="text/css" href="index.css">
+    </head>
+    <body>
+        <table class='tableCentered'>
+            <tr>
+                <td></td>
+                <td class='btnUpDown' id='imageMoveUp'>&uarr;</td></tr>
+                <td></td>
+            <tr>
+                <td class='btnLeftRight' id='imageMoveLeft'>&larr;</td>
+                <td><table id='display'></table></td>
+                <td class='btnLeftRight' id='imageMoveRight'>&rarr;</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class='btnUpDown' id='imageMoveDown'>&darr;</td>
+                <td></td>
+            </tr>
+        </table>
+        <table class='tableCentered'>
+            <tr>
+                <td class='iconTdActive' id='penToolButton'><img class='tdIcon' src='pen.png'></td>
+                <td rowspan='4'><canvas id='colorpicker' width='380px' height='206px'></canvas></td>
+            </tr>
+            <tr>
+                <td class='colorTdActive' id='frontColor'></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='colorTd' id='backColor'></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='iconTd' id='pickToolButton'><img class='tdIcon' src='pick.png'></td>
+                <td></td>
+            </tr>
+        </table>
+        <a href='#' id='clearButton'>clear</a>
+    </body>
+    <script type='text/javascript' src="index.js"></script> 
+</html>
