@@ -1,18 +1,17 @@
-# LightBook sketch
-# Version: v1, 26.05.2016
-# Author: Bim Overbohm (bim.overbohm@googlemail.com)
+// LightBook sketch
+// Version: v2, 03.06.2016
+// Author: Bim Overbohm (bim.overbohm@googlemail.com)
 
 #define FASTLED_ESP8266_RAW_PIN_ORDER // to use regular ESP GPIO numbers like GPIO13
 #include "FastLED.h"
 
 #define LED_DATA_PIN 4
 //#define LED_CLOCK_PIN 5
-#define LEDS_WIDTH 9
-#define LEDS_HEIGHT 6
+#define LEDS_WIDTH 8
+#define LEDS_HEIGHT 8
 #define NUM_LEDS LEDS_WIDTH * LEDS_HEIGHT
 CRGB leds[NUM_LEDS];
 int ledIndex[LEDS_HEIGHT][LEDS_WIDTH];
-int currentPos[2] = {0, 0};
 bool colorChanged = false;
 
 //-----------------------------------------------------------------------------
@@ -32,6 +31,10 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 const uint8_t webSocketResponseOk[] = { 1 };
 const uint8_t webSocketResponseNOk[] = { 0 };
 
+const uint8_t MESSAGE_LED_COLOR = 'l';
+const uint8_t MESSAGE_LED_FRAME = 'f';
+const uint8_t MESSAGE_DISPLAY_SIZE = 's';
+
 //-----------------------------------------------------------------------------
 
 #include <SPI.h>
@@ -41,6 +44,15 @@ const uint8_t webSocketResponseNOk[] = { 0 };
 bool sdCardAvailable = false;
 
 //-----------------------------------------------------------------------------
+
+void webSocketSendServerMessage(uint8_t num, const uint8_t * payload, size_t length)
+{
+    uint8_t * message = new uint8_t[sizeof(uint32_t) + length];
+    *((uint32_t *)message) = 0;
+    memcpy(&message[sizeof(uint32_t)], payload, length);
+    webSocket.sendBIN(num, message, sizeof(uint32_t) + length);
+    delete message;
+}
 
 void webSocketSendResponse(uint8_t num, uint32_t messageId, bool ok)
 {
@@ -72,6 +84,9 @@ void webSocketHandleMessage(uint8_t num, WStype_t type, uint8_t * payload, size_
     case WStype_CONNECTED: {
             Serial.println("Websocket connected");
             IPAddress ip = webSocket.remoteIP(num);
+            //build message for setting up the client page with out width / height
+            const uint8_t message[3] = { MESSAGE_DISPLAY_SIZE, LEDS_WIDTH, LEDS_HEIGHT };
+            webSocketSendServerMessage(num, message, sizeof(message));
         }
         break;
     case WStype_TEXT:
@@ -88,9 +103,9 @@ void webSocketHandleMessage(uint8_t num, WStype_t type, uint8_t * payload, size_
             const uint32_t messageId = webSocketMessageIdFromData(payload, length);
             const char messageType = (char)payload[4];
             const uint8_t * messageData = (const uint8_t *)&payload[5];
-            Serial.print("Binary message id: "); Serial.print(messageId); Serial.print(" type: "); Serial.print(messageType); Serial.println(" received");
+            //Serial.print("Binary message id: "); Serial.print(messageId); Serial.print(" type: "); Serial.print(messageType); Serial.println(" received");
             // check if this is a color for a specific led. format is ID, 'l', X, Y, R, G, B
-            if (messageType == 'l' && length == (4 + 1 + 2 + 3))
+            if (messageType == MESSAGE_LED_COLOR && length == (4 + 1 + 2 + 3))
             {
                 // extract colors from data
                 CRGB col = {messageData[2], messageData[3], messageData[4]};
@@ -103,7 +118,7 @@ void webSocketHandleMessage(uint8_t num, WStype_t type, uint8_t * payload, size_
                 webSocketSendResponse(num, messageId, true);
             }
             // check if this is a full frame. format is ID, 'f', W, H, then (W * H) R, G, B triplets
-            else if (messageType == 'f' && length == (4 + 1 + 2 + NUM_LEDS * 3))
+            else if (messageType == MESSAGE_LED_FRAME && length == (4 + 1 + 2 + NUM_LEDS * 3))
             {
                 //Serial.println(messageData[0]);
                 //Serial.println(messageData[1]);

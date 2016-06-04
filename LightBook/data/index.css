@@ -1,12 +1,14 @@
 body { padding:0px; background:#000000; margin:auto; }
 canvas { border:2px solid #555; border-radius:4px; cursor:crosshair; margin:auto; }
 .tableCentered { border-spacing:0px; border:none; margin:auto; padding:0px; }
+.tdCentered { border-spacing:0px; border:none; margin:auto; padding:0px; }
 #display { border-spacing:0px; border:none; margin:0px; padding:0px; }
 .led { width:42px; height:42px; padding:0px; margin:0px; background:#000000; border:1px solid #555; border-spacing:0px; border-collapse:collapse; cursor:crosshair; }
 .led:hover { border:1px solid #aaa; }
 a, a.hover { font-family:Arial, sans-serif; display:block; background:#555; color:white; text-decoration:none; font-size:2em; text-align:center; }
 .btnUpDown { margin:auto; font-family:Arial, sans-serif; background:#555; color:white; text-decoration:none; font-size:1em; text-align:center; border:none; border-spacing:0px; }
 .btnLeftRight { margin:auto; font-family:Arial, sans-serif; background:#555; color:white; text-decoration:none; font-size:1em; text-align:center; border:none; border-spacing:0px; }
+span { font-family:Arial, sans-serif; color:white; text-decoration:none; font-size:1em; }
 #clearButton, #clearButton.hover { margin-top:10px; margin-left:auto; margin-right:auto; font-family:Arial, sans-serif; display:block; width:406px; background:#666; color:white; text-decoration:none; font-size:2em; text-align:center; }
 .tdIcon { width:36px; height:36px; }
 .iconTd { width:36px; height:36px; padding:4px; background:#666; border:2px solid #000000; border-radius:6px; border-collapse:collapse; cursor:pointer; }

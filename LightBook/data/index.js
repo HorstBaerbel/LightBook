@@ -2,8 +2,8 @@ window.addEventListener('load', initialize, false);
 window.addEventListener('DOMContentLoaded', initialize, false);
 window.addEventListener('resize', windowResized, false);
 
-const DISPLAY_WIDTH = 9;
-const DISPLAY_HEIGHT = 6;
+var DISPLAY_WIDTH = 4;
+var DISPLAY_HEIGHT = 4;
 var backBuffer = new Uint8Array(DISPLAY_WIDTH * DISPLAY_HEIGHT * 3);
 
 var display;
@@ -26,8 +26,9 @@ var toolSelected = TOOL_PEN;
 var penToolButton;
 var pickToolButton;
 
-const LED_COLOR_MESSAGE = 'l'; // identifies a single led color message
-const LED_FRAME_MESSAGE = 'f'; // identifies a full-frame color message
+const MESSAGE_DISPLAY_SIZE = 's'; // identifies a message from the server that sends the size of the display
+const MESSAGE_LED_COLOR = 'l'; // identifies a single led color message
+const MESSAGE_LED_FRAME = 'f'; // identifies a full-frame color message
 var webSocketMessageId = 0; // message identifier. this will increase for every message
 var webSocketSendQueue = []; // list of messages currently sent (#0) or queued (#1+) with their id, type and binary data
 var webSocketLastMessageSent; // the last sucessfully sent message
@@ -87,11 +88,17 @@ function webSocketProcessResponse(responseData) {
 		var messageId = response.getUint32(0, true);
 		// check if this is a server command or response
 		if (messageId == 0) {
-			// server command
-			// ...
+			// server command. check what it is
+            if (response.getUint8(Uint32Array.BYTES_PER_ELEMENT) == MESSAGE_DISPLAY_SIZE.charCodeAt()) {
+                // new LED display size, dissect message
+                var newWidth = response.getUint8(Uint32Array.BYTES_PER_ELEMENT + 1);
+                var newHeight = response.getUint8(Uint32Array.BYTES_PER_ELEMENT + 2);
+                console.log('New display size: ' + newWidth + "x" + newHeight);
+                setDisplaySize(newWidth, newHeight);
+            }
 		}
 		else {
-			// response. find message in queue
+			// server response to our message. find message in queue
 			if (response.byteLength >= Uint32Array.BYTES_PER_ELEMENT + 1) {
 				// get response success
 				var success = response.getUint8(Uint32Array.BYTES_PER_ELEMENT);
@@ -179,15 +186,15 @@ function sendWebSocketMessage(data, dataType, overwrite = false) {
 
 function sendLedColor(lX, lY) {
 	var index = 3 * (lY * DISPLAY_WIDTH + lX);
-	var data = new Uint8Array([LED_COLOR_MESSAGE.charCodeAt(), lX, lY, backBuffer[index], backBuffer[index + 1], backBuffer[index + 2]]); //'l' + x + y + color
-	sendWebSocketMessage(data, LED_COLOR_MESSAGE);
+	var data = new Uint8Array([MESSAGE_LED_COLOR.charCodeAt(), lX, lY, backBuffer[index], backBuffer[index + 1], backBuffer[index + 2]]); //'l' + x + y + color
+	sendWebSocketMessage(data, MESSAGE_LED_COLOR);
 }
 
 function sendLedFrame() {
 	var data = new Uint8Array(3 + backBuffer.byteLength); //'f' + w + h + frame data
-	data.set(new Uint8Array([LED_FRAME_MESSAGE.charCodeAt(), DISPLAY_WIDTH, DISPLAY_HEIGHT]), 0);
+	data.set(new Uint8Array([MESSAGE_LED_FRAME.charCodeAt(), DISPLAY_WIDTH, DISPLAY_HEIGHT]), 0);
 	data.set(backBuffer, 3);
-	sendWebSocketMessage(data, LED_FRAME_MESSAGE, true);
+	sendWebSocketMessage(data, MESSAGE_LED_FRAME, true);
 }
 
 function colorHexToBin(c) {
@@ -283,13 +290,27 @@ function setFrontBackColor(pX, pY) {
 	}
 }
 
-function addEventListeners()
-{
-	// add event listener when user clicks on a led or moves over it with mouse down
-	for (var r = 0; r < display.rows.length; r++) {
-		var row = display.rows[r];
-		for (var c = 0; c < row.cells.length; c++) {
-			var cell = row.cells[c];
+function setDisplaySize(newWidth, newHeight) {
+	if (newWidth != DISPLAY_WIDTH || newHeight != DISPLAY_HEIGHT) {
+		DISPLAY_WIDTH = newWidth;
+		DISPLAY_HEIGHT = newHeight;
+		backBuffer = new Uint8Array(DISPLAY_WIDTH * DISPLAY_HEIGHT * 3);
+		buildDisplayTable(newWidth, newHeight);
+	}
+}
+
+function buildDisplayTable(width, height) {
+	// clear table first
+	while (display.rows.length > 0) {
+		display.deleteRow(0);
+	}
+	// now insert new row and columns
+	for (var r = 0; r < height; r++) {
+		var tr = display.insertRow();
+		for (var c = 0; c < width; c++) {
+			var cell = tr.insertCell();
+			cell.className = 'led';
+			// add event listener when user clicks on a led or moves over it with mouse down
 			cell.addEventListener('mousedown', 
 			function (x, y, evt) {
 				isMouseDownOnLed = true;
@@ -312,6 +333,10 @@ function addEventListeners()
 			}.bind(cell, c, r, undefined));
 		}
 	}
+}
+
+function addEventListeners()
+{
 	// add event listeners to the canvas for mouse move events
 	canvas.addEventListener('mousedown',
 	function (evt) {
@@ -378,16 +403,6 @@ function windowResized() {
 	fillColorPicker();
 }
 
-function fillDisplayTable() {
-	for (var r = 0; r < DISPLAY_HEIGHT; r++) {
-		var tr = display.insertRow();
-		for (var c = 0; c < DISPLAY_WIDTH; c++) {
-			var td = tr.insertCell();
-			td.className = 'led';
-		}
-	}
-}
-
 function fillColorPicker() {
 	var colors = context.createLinearGradient(0, 0, context.canvas.width, 0);
 	for(var i = 0; i <= 360; i += 10) {
@@ -417,7 +432,7 @@ function initialize() {
 		penToolButton = document.getElementById('penToolButton');
 		pickToolButton = document.getElementById('pickToolButton');
 		fillColorPicker();
-		fillDisplayTable()
+		buildDisplayTable(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		addEventListeners();
 		initializeWebSocket();
 	}
