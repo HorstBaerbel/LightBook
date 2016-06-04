@@ -1,7 +1,8 @@
 // LightBook sketch
-// Version: v2, 03.06.2016
+// Version: v3, 03.06.2016
 // Author: Bim Overbohm (bim.overbohm@googlemail.com)
 
+//#define FASTLED_ALLOW_INTERRUPTS 0 // define this if you have issues with flickering
 #define FASTLED_ESP8266_RAW_PIN_ORDER // to use regular ESP GPIO numbers like GPIO13
 #include "FastLED.h"
 
