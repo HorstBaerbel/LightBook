@@ -327,6 +327,14 @@ bool showNextGIF()
     if (!directory) {
         return false;
     }
+    // if we are not currently showing a GIF file, show the first one
+    if (!gifFile || gifFileName == "") {
+        File file = directory.openNextFile();
+        String firstFileName = file.name();
+        file.close();
+        directory.close();
+        return showGIF(gifDirectory + "/" + firstFileName);
+    }
     DEBUG_OUTPUT(Serial.println("Opened GIF directory");)
     // look for the current GIF in the files
     uint16_t currentIndex = 0;
@@ -540,8 +548,8 @@ void setup()
     gifDecoder.setFilePositionCallback(filePositionCallback);
     gifDecoder.setFileReadCallback(fileReadCallback);
     gifDecoder.setFileReadBlockCallback(fileReadBlockCallback);
-    // start displaying a GIF
-    showGIF(gifDirectory + "/swirl.gif");
+    // start displaying the first GIF
+    showNextGIF();
 }
 
 //-----------------------------------------------------------------------------

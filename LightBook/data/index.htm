@@ -56,5 +56,13 @@
         <a href='#' id='clearButton'>clear</a>
         <a href='http://github.com/HorstBaerbel/LightBook' id='githubButton'>Go to GitHub repository</a>
     </body>
-    <script type='text/javascript' src="index.js"></script> 
+     <script type='text/javascript' src='index.js'></script>
+    <script type='text/javascript'>
+		window.addEventListener('load', initialize, false);
+		window.addEventListener('DOMContentLoaded', initialize, false);
+		window.addEventListener('resize', windowResized, false);
+	</script>
+<!--
+    <script type='text/javascript' src='include.js' onload='requiredScripts = ["index.js"]; include(requiredScripts, initialize());'></script>
+-->
 </html>

@@ -264,9 +264,9 @@ void setup()
     // build indices for LED indexing
     buildLedIndices();
     // show initial rgb "flash"
-    showColor(CRGB(63, 0, 0)); delay(250);
-    showColor(CRGB(0, 63, 0)); delay(250);
-    showColor(CRGB(0, 0, 63)); delay(250);
+    showColor(CRGB(255, 0, 0)); delay(250);
+    showColor(CRGB(0, 255, 0)); delay(250);
+    showColor(CRGB(0, 0, 255)); delay(250);
     showColor(CRGB(0, 0, 0));
 }
 

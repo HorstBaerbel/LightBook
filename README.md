@@ -1,3 +1,5 @@
+This repository contains two similar projects: LightBook and GIFBook:  
+
 LightBook
 ========
 LightBook is a project that uses an ESP8266-201 module, a SD card and a WS2812 RGB LED strip (arranged as a 8*8 array) as a WiFi-enabled interactive canvas. The ESP8266 WiFi access point serves a minimalistic web page that can be used to "paint" on the LED display. The whole electronics are packaged in an old book to be put into a bookshelf.  
@@ -11,19 +13,29 @@ This circuit uses GPIO 2 and 12-14 for the SD card interface and GPIO 4 for the 
 Some general ESP8266 GPIO info is here: http://www.esp8266.com/wiki/doku.php?id=esp8266_gpio_pin_allocations and a ESP-201 pinout is here: http://adlerweb.deviantart.com/art/ESP8266-ESP-201-Module-Pinout-Diagram-Cheat-Sheet-575951137  
 The web page served look something like this and allows for simple pixel-painting on the display:  
 ![LightBook web page served](webpage.png?raw=true)  
-Planned features are a way to make animations and to store animations on the SD card.
+
+GIFBook
+========
+GIFBook is a project that uses an ESP8266-201 module, a SD card and a WS2812 RGB LED strip (arranged as a 8*8 array) as a WiFi-enabled GIF player. You can toggle the GIF being played using a button.  
+The code is written for the ESP8266 Arduino IDE and uses FastLED for driving the LED strip. WebSockets are used to exchange binary messages between JavaScript and the ESP module.  
+The [Fritzing](http://fritzing.org/) circuit layout can be found in [LightBook_SD.fzz](LightBook_SD.fzz) and the necessary Arduino source code in [GIFBook/GIFBook.ino](GIFBook/GIFBook.ino).  
+GIFbook plays 8x8 (and ONLY 8x8) GIFs from the /gifs folder on the SD card. It start with the first GIF (which is btw the GIF file copied to SD card first) and you can skip to the next GIF by short-pressing the button connnected to GPIO5.  
 
 License
 ========
 [BSD-2-Clause](http://opensource.org/licenses/BSD-2-Clause), see [LICENSE.md](LICENSE.md).  
+AnimatedGIFs uses the [MIT license](https://opensource.org/licenses/MIT), see [LICENSE.txt](AnimatedGIFs/LICENSE.txt).  
+I hope those are compatible...
 
 Compiling
 ========
-Make sure you have a recent Arduino IDE version (1.6.9+) and [support for the ESP8266](https://github.com/esp8266/Arduino). You may also need the most recent [FastLED](https://github.com/FastLED/FastLED) version. The content of the data folder should go to your FAT32-formatted SD card.
+Make sure you have a recent Arduino IDE version (1.6.9+) and [support for the ESP8266](https://github.com/esp8266/Arduino). You may also need the most recent [FastLED](https://github.com/FastLED/FastLED) version. The content of the data folder should go to your FAT32-formatted SD card.  
+To compile GIFBook you additionally need the wonderful [AnimatedGIFs](https://github.com/pixelmatix/AnimatedGIFs) project by [pixelmatix](https://github.com/pixelmatix) that I cloned into the AnimatedGIFs directory as a submodule. Copy the whole AnimatedGIFs folder to your Arduino library directory.
 
 Usage
 ========
-Power up the circuit, connect to the AP, browse to [http://lightbook](http://lightbook) and go paint something nice :)
+For LightBook, power up the circuit, connect to the AP, browse to [http://lightbook](http://lightbook) and go paint something nice :)  
+For GIFBook, just power it on and push the button to show the next GIF.
 
 I found a bug or have a suggestion
 ========

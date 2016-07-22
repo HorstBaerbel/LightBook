@@ -1,7 +1,3 @@
-window.addEventListener('load', initialize, false);
-window.addEventListener('DOMContentLoaded', initialize, false);
-window.addEventListener('resize', windowResized, false);
-
 var DISPLAY_WIDTH = 8;
 var DISPLAY_HEIGHT = 8;
 var backBuffer = new Uint8Array(DISPLAY_WIDTH * DISPLAY_HEIGHT * 3);
