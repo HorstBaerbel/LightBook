@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LightBook</title>
+        <meta name='mobile-web-app-capable' content='yes' />
+        <meta name='viewport' content='width=device-width, height=device-height' />
+        <link media='screen' rel="stylesheet" type="text/css" href="index.css">
+    </head>
+    <body>
+        <table class='tableCentered'>
+            <tr>
+                <td></td>
+                <td class='btnUpDown' id='imageMoveUp'>&uarr;</td></tr>
+                <td></td>
+            <tr>
+                <td class='btnLeftRight' id='imageMoveLeft'>&larr;</td>
+                <td><table id='display'></table></td>
+                <td class='btnLeftRight' id='imageMoveRight'>&rarr;</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class='btnUpDown' id='imageMoveDown'>&darr;</td>
+                <td></td>
+            </tr>
+<!--
+			<tr>
+                <td colspan=3 >
+					<span>Frame #</span><input id='frameSlider' type="range" min="0" max="10" value="0" /><input id='frameNr' type="number" name="quantity" min="1" max="10" /><span> of </span><input id='frameCount' type="number" name="quantity" min="1" max="10" />
+				</td>
+			</tr>
+			<tr>
+                <td colspan=3 >
+					<span> Frame delay </span><input id='frameDelay' type="number" name="quantity" min="10" max="2000" /><span> ms</span></span>
+				</td>
+			</tr>
+-->
+        </table>
+        <table class='tableCentered'>
+            <tr>
+                <td class='iconTdActive' id='penToolButton'><img class='tdIcon' src='pen.png'></td>
+                <td rowspan='4'><canvas id='colorpicker' width='380px' height='206px'></canvas></td>
+            </tr>
+            <tr>
+                <td class='colorTdActive' id='frontColor'></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='colorTd' id='backColor'></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class='iconTd' id='pickToolButton'><img class='tdIcon' src='pick.png'></td>
+                <td></td>
+            </tr>
+        </table>
+        <a href='#' id='clearButton'>clear</a>
+        <a href='http://github.com/HorstBaerbel/LightBook' id='githubButton'>Go to GitHub repository</a>
+    </body>
+     <script type='text/javascript' src='index.js'></script>
+    <script type='text/javascript'>
+		window.addEventListener('load', initialize, false);
+		window.addEventListener('DOMContentLoaded', initialize, false);
+		window.addEventListener('resize', windowResized, false);
+	</script>
+<!--
+    <script type='text/javascript' src='include.js' onload='requiredScripts = ["index.js"]; include(requiredScripts, initialize());'></script>
+-->
+</html>
