@@ -17,8 +17,10 @@ The web page served look something like this and allows for simple pixel-paintin
 GIFBook
 ========
 GIFBook is a project that uses an ESP8266-201 module, a SD card and a WS2812 RGB LED strip (arranged as a 8*8 array) as a WiFi-enabled GIF player. You can toggle the GIF being played using a button.  
+![GIFBook front](GIFBook.jpg?raw=true)  
 The code is written for the ESP8266 Arduino IDE and uses FastLED for driving the LED strip. WebSockets are used to exchange binary messages between JavaScript and the ESP module.  
 The [Fritzing](http://fritzing.org/) circuit layout can be found in [LightBook_SD.fzz](LightBook_SD.fzz) and the necessary Arduino source code in [GIFBook/GIFBook.ino](GIFBook/GIFBook.ino).  
+![GIFBook inside](GIFBook_inside.jpg?raw=true)  
 GIFbook plays 8x8 (and ONLY 8x8) GIFs from the /gifs folder on the SD card. It start with the first GIF (which is btw the GIF file copied to SD card first) and you can skip to the next GIF by short-pressing the button connnected to GPIO5.  
 
 License

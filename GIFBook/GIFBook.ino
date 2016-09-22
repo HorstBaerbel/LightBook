@@ -521,8 +521,8 @@ void setup()
     // set up web server
     webServer.on("/", handleClientRequest);
     webServer.onNotFound(handleClientRequest);
-    webServer.on("/gifs", HTTP_POST, [](){ returnOk(); }, handleFileUpload);
-    webServer.on("/gifs", HTTP_DELETE, handleDelete);
+    //webServer.on("/gifs", HTTP_POST, [](){ returnOk(); }, handleFileUpload);
+    //webServer.on("/gifs", HTTP_DELETE, handleDelete);
     webServer.begin();
     // set up websockets
     webSocket.begin();
@@ -532,7 +532,7 @@ void setup()
     //FastLED.setCorrection(TypicalLEDStrip); //makes the colors look funny...
     FastLED.setTemperature(Tungsten40W); // gives me colors closer to what I see on my screen...
     FastLED.setDither(DISABLE_DITHER);
-    FastLED.setBrightness(96);
+    FastLED.setBrightness(128);
     // build indices for LED indexing
     buildLedIndices();
     // show initial rgb "flash"
